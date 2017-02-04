@@ -1,25 +1,31 @@
 #include <GL/glut.h>
 #include <stdio.h>
 
-float WinWid=400.0;
-float WinHei=400.0;
-float x=0.0, y=0.0;
+float win_width = 400.0;
+float win_height = 400.0;
+
+
+float f(float x)
+{
+   return x * x / 100 - 100;
+}
+
+void draw_func()
+{
+   glVertex2f(-win_width / 2, f(-win_width / 2));
+   for (float x = -win_width / 2; x < win_width / 2; x += 1)
+   {
+      glVertex2f(x, f(x));
+      glVertex2f(x, f(x));
+   }
+}
 
 void Draw()
 {
    glClear(GL_COLOR_BUFFER_BIT);
    glPushMatrix();
    glBegin(GL_LINES);
-      for(float i=0+x; i<=WinWid+x; i+=20.0)
-      {
-         glVertex2f(i, 0+y);
-         glVertex2f(i, WinHei+y);
-      }
-      for(float i=0+y; i<=WinHei+y; i+=20.0)
-      {
-         glVertex2f(0+x, i);
-         glVertex2f(WinWid+x, i);
-      }
+   draw_func();
    glEnd();
    glPopMatrix();
    glutSwapBuffers();
@@ -75,24 +81,26 @@ void Initialize()
    glClearColor(0.0, 0.0, 0.0, 1.0);
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
-   //glOrtho(-WinWid/2, WinWid/2, -WinHei/2, WinHei/2, -200.0, 200.0);
-   glOrtho(0, WinWid, WinHei, 0, -200.0, 200.0);
+   glOrtho(-win_width/2, win_width/2, -win_height/2, win_height/2, -200.0, 200.0);
+   //glOrtho(0, win_width, win_height, 0, -200.0, 200.0);
    glMatrixMode(GL_MODELVIEW);
 }
 
 int main(int argc, char** argv)
 {
+
+
    glutInit(&argc, argv);
 
    int screen_width = glutGet(GLUT_SCREEN_WIDTH);
    int screen_height = glutGet(GLUT_SCREEN_HEIGHT);
 
-   glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB);
-   glutInitWindowSize(WinWid, WinHei);
+   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+   glutInitWindowSize(win_width, win_height);
 
 
-   glutInitWindowPosition(100, 300);
-   glutCreateWindow("Lesson 06");
+   glutInitWindowPosition((screen_width - win_width) / 2, (screen_height - win_height) / 2);
+   glutCreateWindow("functions");
    glutDisplayFunc(Draw);
    glutMotionFunc(MousePressedMove);
    glutPassiveMotionFunc(MouseMove);
